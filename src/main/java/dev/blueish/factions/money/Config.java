@@ -48,4 +48,7 @@ public class Config {
 
     @SerializedName("useMax")
     public boolean USE_MAX = false;
+
+    @SerializedName("ticksToReload")
+    public int TICKS_TO_RELOAD = 4800;
 }
