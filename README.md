@@ -50,6 +50,6 @@ The number of ticks before it recounts each faction's money
   },
   "multiplier": 0.01,
   "useMax": false,
-  "ticksToReload": 60
+  "ticksToReload": 4800
 }
 ```
