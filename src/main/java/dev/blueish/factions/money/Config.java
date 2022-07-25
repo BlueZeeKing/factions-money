@@ -45,4 +45,7 @@ public class Config {
 
     @SerializedName("multiplier")
     public double MULTIPLIER = 0.01;
+
+    @SerializedName("useMax")
+    public boolean USE_MAX = false;
 }

@@ -11,11 +11,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class FactionMixin {
     @Inject(method = "calculateMaxPower", at = @At("RETURN"), cancellable = true, remap = false)
     public void calculateMaxPower(CallbackInfoReturnable<Integer> cir) {
+        if (!FactionsMoneyMod.CONFIG.USE_MAX) return;
         cir.setReturnValue(cir.getReturnValue() + FactionsMoneyMod.getMoney((Faction)(Object)this));
     }
 
     @Inject(method = "getPower", at = @At("RETURN"), cancellable = true, remap = false)
     public void getPower(CallbackInfoReturnable<Integer> cir) {
+        if (FactionsMoneyMod.CONFIG.USE_MAX) return;
         cir.setReturnValue(cir.getReturnValue() + FactionsMoneyMod.getMoney((Faction)(Object)this));
     }
 }
