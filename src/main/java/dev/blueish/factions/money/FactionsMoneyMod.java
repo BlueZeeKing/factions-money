@@ -4,6 +4,7 @@ import io.icker.factions.api.events.MiscEvents;
 import io.icker.factions.api.persistents.Claim;
 import io.icker.factions.api.persistents.Faction;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ChestBlock;
 import net.minecraft.block.enums.ChestType;
@@ -28,10 +29,11 @@ public class FactionsMoneyMod implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		MiscEvents.ON_SAVE.register(FactionsMoneyMod::onSave);
+		MiscEvents.ON_SAVE.register(FactionsMoneyMod::checkClaims);
+		ServerLifecycleEvents.SERVER_STARTED.register(FactionsMoneyMod::checkClaims);
 	}
 
-	public static void onSave(MinecraftServer server) {
+	public static void checkClaims(MinecraftServer server) {
 		for (Faction faction : Faction.all()) {
 			int count = 0;
 			for (Claim claim : faction.getClaims()) {
