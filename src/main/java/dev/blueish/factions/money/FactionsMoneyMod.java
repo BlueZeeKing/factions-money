@@ -1,13 +1,14 @@
 package dev.blueish.factions.money;
 
-import io.icker.factions.api.events.MiscEvents;
 import io.icker.factions.api.persistents.Claim;
 import io.icker.factions.api.persistents.Faction;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.minecraft.block.BarrelBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ChestBlock;
+import net.minecraft.block.entity.BarrelBlockEntity;
 import net.minecraft.block.enums.ChestType;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.server.MinecraftServer;
@@ -44,22 +45,34 @@ public class FactionsMoneyMod implements ModInitializer {
 			for (Claim claim : faction.getClaims()) {
 				ServerWorld world = getWorld(server, claim.level);
 				WorldChunk chunk = world.getChunk(claim.x, claim.z);
+				BarrelBlockEntity entity;
 
 				for (BlockPos pos : chunk.getBlockEntities().keySet()) {
 					BlockState state = chunk.getBlockState(pos);
-					Inventory inventory;
-					if (state.getBlock() instanceof ChestBlock && (state.get(ChestBlock.CHEST_TYPE) == ChestType.SINGLE || state.get(ChestBlock.CHEST_TYPE) == ChestType.RIGHT) && (inventory = ChestBlock.getInventory((ChestBlock) state.getBlock(), state, world, pos, true)) != null) {
+					if (state.getBlock() instanceof ChestBlock && (state.get(ChestBlock.CHEST_TYPE) == ChestType.SINGLE || state.get(ChestBlock.CHEST_TYPE) == ChestType.RIGHT)) {
+						count += countInventory(ChestBlock.getInventory((ChestBlock) state.getBlock(), state, world, pos, true));
+					} else if (state.getBlock() instanceof BarrelBlock && (entity = (BarrelBlockEntity)chunk.getBlockEntity(pos)) != null) {
 						for (String key : CONFIG.ITEMS.keySet()) {
-							count += inventory.count(Registry.ITEM.get(new Identifier(key))) * CONFIG.ITEMS.get(key);
+							count += entity.count(Registry.ITEM.get(new Identifier(key))) * CONFIG.ITEMS.get(key);
 						}
 					}
 				}
 			}
+			count += countInventory(faction.getSafe());
 			STORE.put(faction.getID(), (int) Math.round(count * CONFIG.MULTIPLIER));
 		}
 	}
 
-	public static ServerWorld getWorld(MinecraftServer server, String key) {
+	private static int countInventory(Inventory inventory) {
+		if (inventory == null) return 0;
+		int count = 0;
+		for (String key : CONFIG.ITEMS.keySet()) {
+			count += inventory.count(Registry.ITEM.get(new Identifier(key))) * CONFIG.ITEMS.get(key);
+		}
+		return count;
+	}
+
+	private static ServerWorld getWorld(MinecraftServer server, String key) {
 		return server.getWorld(server.getWorldRegistryKeys().stream().filter((worldRegistryKey -> Objects.equals(worldRegistryKey.getValue().toString(), key))).findAny().orElse(null));
 	}
 
