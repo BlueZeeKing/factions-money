@@ -17,11 +17,14 @@ import net.minecraft.world.chunk.WorldChunk;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
 import java.util.Objects;
+import java.util.UUID;
 
 public class FactionsMoneyMod implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger("factions-money");
 	public static Config CONFIG = Config.load();
+	private static final HashMap<UUID, Integer> STORE = new HashMap<>();
 
 	@Override
 	public void onInitialize() {
@@ -45,11 +48,18 @@ public class FactionsMoneyMod implements ModInitializer {
 					}
 				}
 			}
-			FactionsMoneyMod.LOGGER.info(String.valueOf(Math.round(count * CONFIG.MULTIPLIER)));
+			STORE.put(faction.getID(), (int) Math.round(count * CONFIG.MULTIPLIER));
 		}
 	}
 
 	public static ServerWorld getWorld(MinecraftServer server, String key) {
 		return server.getWorld(server.getWorldRegistryKeys().stream().filter((worldRegistryKey -> Objects.equals(worldRegistryKey.getValue().toString(), key))).findAny().orElse(null));
+	}
+
+	public static int getMoney(Faction faction) {
+		if (STORE.containsKey(faction.getID())) {
+			return STORE.get(faction.getID());
+		}
+		return 0;
 	}
 }

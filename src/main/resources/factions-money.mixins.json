@@ -4,6 +4,7 @@
   "package": "dev.blueish.factions.money.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "FactionMixin"
   ],
   "client": [],
   "injectors": {
