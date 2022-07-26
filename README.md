@@ -14,7 +14,7 @@ When the server starts this mod checks every claim and every chest or barrel in 
 
 This is a list of item ids (e.g. `minecraft:diamond`) and their corresponding money value
 
-**Default**:
+**Example**:
 ```json
 {
     "minecraft:diamond": 5,
@@ -40,13 +40,19 @@ The number of ticks before it recounts each faction's money
 
 **Default**: `4800` (4mins)
 
-### Example Config
+### Default Config
 
 ```json
 {
   "items": {
+    "minecraft:diamond_block": 45,
+    "minecraft:gold": 3,
+    "minecraft:emerald": 3,
+    "minecraft:emerald_block": 27,
+    "minecraft:iron_block": 18,
     "minecraft:diamond": 5,
-    "minecraft:emerald": 3
+    "minecraft:iron": 2,
+    "minecraft:gold_block": 27
   },
   "multiplier": 0.01,
   "useMax": false,

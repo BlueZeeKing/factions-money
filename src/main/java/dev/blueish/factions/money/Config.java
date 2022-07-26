@@ -41,7 +41,16 @@ public class Config {
     }
 
     @SerializedName("items")
-    public HashMap<String, Integer> ITEMS = new HashMap<>();
+    public HashMap<String, Integer> ITEMS = new HashMap<>() {{
+        put("minecraft:diamond", 5);
+        put("minecraft:diamond_block", 45);
+        put("minecraft:emerald", 3);
+        put("minecraft:emerald_block", 27);
+        put("minecraft:gold", 3);
+        put("minecraft:gold_block", 27);
+        put("minecraft:iron", 2);
+        put("minecraft:iron_block", 18);
+    }};
 
     @SerializedName("multiplier")
     public double MULTIPLIER = 0.01;
